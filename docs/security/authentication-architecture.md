@@ -19,6 +19,12 @@ Passkeys do not require a separate authentication-service contract. The user's o
 
 Username-and-password login remains available for migration compatibility. A new public deployment should prioritize federated identity and Passkeys while presenting password login only as a legacy path.
 
+## Privacy Policy Linkage
+
+The deployed service maintains a separate [privacy policy page](https://safer-secure-market-2026.hippipo779.chatgpt.site/privacy), linked from the global footer. It explains the pseudonymized platform identity, session metadata, Passkey public credential material, and authentication security events processed by this boundary, as well as the information SAFER deliberately does not collect.
+
+Any authentication change that adds an identifier, authenticator attribute, recovery mechanism, processor, or retention period must update the policy in the same pull request. The application policy is the canonical user notice; this architecture document provides the technical rationale.
+
 ## Server-side Passkey Verification
 
 - Pin the RP ID and HTTPS origin in runtime configuration and reject requests whose origin does not match.

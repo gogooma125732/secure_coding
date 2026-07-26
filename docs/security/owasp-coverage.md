@@ -58,7 +58,15 @@ This document maps the OWASP API Security Top 10:2023 and OWASP Top 10:2025 to S
 - The OWASP ZAP configuration and blocking rules are included in the repository. Because Docker is not available in every local environment, run the safe Baseline Scan against the deployment URL and restrict Active Scan to an explicitly approved localhost target.
 - This Top 10 mapping is a risk-prioritized control matrix. It does not replace SAST/DAST, role-based API penetration testing, supply-chain signature verification, secret rotation, or recovery exercises.
 
+## Privacy Notice and Governance
+
+SAFER manages its user-facing privacy policy as a separate application page at [https://safer-secure-market-2026.hippipo779.chatgpt.site/privacy](https://safer-secure-market-2026.hippipo779.chatgpt.site/privacy), linked from the global footer. The page describes the identifiers and service data processed by authentication, Passkeys, product and chat features, reporting, internal and Ethereum wallets, transactions, rate limiting, and security logging.
+
+Security changes that alter personal-data collection, purpose, retention, disclosure, or user rights must update the policy in the same pull request and deploy it with the corresponding application version. This governance step complements the technical controls above; it does not replace data minimization, authorization, encryption, retention enforcement, or legal review.
+
 ## Official References
 
 - https://owasp.org/API-Security/editions/2023/en/0x11-t10/
 - https://owasp.org/Top10/
+- https://www.law.go.kr/법령/개인정보보호법
+- https://www.pipc.go.kr/np/cop/bbs/selectBoardArticle.do?bbsId=BS217&mCode=D010030000&nttId=11134

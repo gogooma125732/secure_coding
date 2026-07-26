@@ -29,3 +29,9 @@ The following areas receive priority:
 - Sensitive information recorded in audit logs
 
 Do not perform automated high-volume requests, denial-of-service testing, production data modification, or real-asset transfers without prior authorization.
+
+## Privacy Policy and Personal Data
+
+SAFER manages its user-facing privacy policy as a separate in-product page at [https://safer-secure-market-2026.hippipo779.chatgpt.site/privacy](https://safer-secure-market-2026.hippipo779.chatgpt.site/privacy), linked from the global footer. The published page is the canonical notice for the personal data processed by the deployed service.
+
+Privacy-impacting security reports—including unintended collection, excessive retention, identifier correlation, disclosure through logs or APIs, and differences between the published policy and actual processing—are in scope. Submit them through the same private vulnerability-reporting channel and use de-identified evidence only.

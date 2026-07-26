@@ -19,6 +19,7 @@ It provides account registration, product management, chat, reporting, hash ID-b
 - Ethereum wallet signature linking and a fixed-price escrow example
 - Administrator-only dashboard and security audit logs
 - CSP nonces, browser security event reporting, and safe error responses
+- A separately managed in-product privacy policy linked from the site footer
 
 ## Technology Stack
 
@@ -138,6 +139,15 @@ When CodeQL raises an alert, document the fix or false-positive justification be
 - [Smart contract threat model](docs/security/smart-contract-threat-model.md)
 - [Maintenance procedure](docs/maintenance.md)
 - [Vulnerability reporting policy](SECURITY.md)
+- [Published SAFER privacy policy](https://safer-secure-market-2026.hippipo779.chatgpt.site/privacy)
+- [Korean Personal Information Protection Act](https://www.law.go.kr/법령/개인정보보호법)
+- [Personal Information Protection Commission privacy-policy guidelines (April 2025)](https://www.pipc.go.kr/np/cop/bbs/selectBoardArticle.do?bbsId=BS217&mCode=D010030000&nttId=11134)
+
+## Privacy Policy Management
+
+The user-facing privacy policy is managed as a separate page inside the deployed service at [`/privacy`](https://safer-secure-market-2026.hippipo779.chatgpt.site/privacy) and is linked directly from the global footer. The route entry is defined in `app/privacy/page.tsx`, while the rendered policy and navigation are maintained with the application UI in `app/marketplace-client.tsx`.
+
+The deployed page is the canonical notice presented to users; this README only describes how it is governed. Any change to collected data, authentication, sessions, Passkeys, uploads, chat, reports, transactions, wallets, security logs, retention, third-party processing, or on-chain disclosure must update the privacy policy in the same change set. The updated page must be reviewed against the Personal Information Protection Act and the Personal Information Protection Commission guidelines, regression-tested, and deployed as a new site version.
 
 ## Core Security Principles
 

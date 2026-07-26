@@ -40,3 +40,8 @@ keystore for the deployment transaction.
 
 Mainnet activation is intentionally gated on an independent audit, multisig
 runbook exercise, invariant/fuzz testing, and an incident-response drill.
+Before any public-network deployment, also update the service's separate
+[privacy policy page](https://safer-secure-market-2026.hippipo779.chatgpt.site/privacy)
+to disclose the public and effectively immutable nature of wallet addresses,
+contract events, order identifiers, and transaction values introduced by the
+deployed contract.

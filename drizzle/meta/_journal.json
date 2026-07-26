@@ -1,0 +1,83 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1784565868386,
+      "tag": "0000_light_hawkeye",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1784608794385,
+      "tag": "0001_cool_sentry",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1784620110600,
+      "tag": "0002_yielding_avengers",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1784655808119,
+      "tag": "0003_chilly_leo",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "6",
+      "when": 1784720052407,
+      "tag": "0004_useful_black_tarantula",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "6",
+      "when": 1784734263404,
+      "tag": "0005_tense_molten_man",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "6",
+      "when": 1784797115206,
+      "tag": "0006_platform_identity",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "6",
+      "when": 1784800037617,
+      "tag": "0007_passkeys",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "6",
+      "when": 1784808248121,
+      "tag": "0008_require_runtime_admin_bootstrap",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "6",
+      "when": 1784869200000,
+      "tag": "0009_zero_unearned_wallet_balances",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "6",
+      "when": 1784871000000,
+      "tag": "0010_invalidate_legacy_sessions",
+      "breakpoints": true
+    }
+  ]
+}

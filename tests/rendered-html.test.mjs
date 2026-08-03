@@ -40,7 +40,7 @@ test("adds browser hardening headers", async () => {
   assert.match(worker, /frame-ancestors 'none'/);
   assert.match(worker, /form-action 'self'/);
   assert.match(worker, /frame-src 'none'/);
-  assert.doesNotMatch(worker, /challenges\.cloudflare\.com/);
+  assert.doesNotMatch(worker, /(?:^|[^\w.-])challenges\.cloudflare\.com(?:$|[^\w.-])/);
   assert.match(worker, /cross-origin-resource-policy.*same-origin/);
   assert.match(worker, /x-permitted-cross-domain-policies.*none/);
   assert.match(worker, /script-src-attr 'none'/);

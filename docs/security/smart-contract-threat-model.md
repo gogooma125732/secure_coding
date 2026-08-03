@@ -58,3 +58,12 @@ authority.
    recovery runbook, and no private key in source or hosted environment values.
 6. Add independent Slither, fuzz/invariant, and manual review results to the
    course report before mainnet activation.
+
+## Privacy disclosure
+
+The deployed service maintains a separate [privacy policy page](https://safer-secure-market-2026.hippipo779.chatgpt.site/privacy)
+linked from the global footer. It distinguishes SAFER's off-chain records from
+public Ethereum addresses and immutable on-chain transaction data. Any change
+that places an additional identifier, order field, event, or transaction value
+on-chain must update that policy before deployment; deletion promises must not
+be made for data that SAFER cannot remove from the network.

@@ -1,26 +1,27 @@
 # SAFER — Secure Second-hand Marketplace
 
-시큐어 소프트웨어 공학 수업을 위해 개발한 보안 중심 중고거래 플랫폼입니다.
-회원가입, 상품 관리, 채팅, 신고, hash ID 기반 송금, 상품 거래 결제와 관리자 운영 기능을 제공합니다.
+SAFER is a security-focused second-hand marketplace developed for a Secure Software Engineering course.
+It provides account registration, product management, chat, reporting, hash ID-based transfers, product payment flows, and administrative operations.
 
-> 이 저장소에는 비밀번호, 지갑 seed, 세션, API 토큰, 실제 환경변수와 운영 데이터가 포함되어 있지 않습니다.
+> This repository does not contain passwords, wallet seeds, sessions, API tokens, real environment variables, or production data.
 
-## 주요 기능
+## Key Features
 
-- Sites/ChatGPT 연합 신원과 WebAuthn Passkey 기반 인증
-- PBKDF2-SHA-256 비밀번호 해시와 서버 세션
-- 상품 등록·검색·상세 조회·판매자 관리
-- JPEG·PNG·WebP magic byte 검사와 5MB 업로드 제한
-- 전체 채팅과 1:1 채팅
-- 사용자·상품 신고 및 누적 신고 자동 조치
-- 256비트 seed에서 파생한 `wlt_` hash ID 기반 지갑
-- 원자적·멱등 송금과 자가 송금·중복 결제 방지
-- 상품 구매 요청·승인·결제 상태 전이
-- Ethereum 지갑 서명 연결과 고정가 에스크로 예제
-- 관리자 전용 대시보드와 보안 감사 로그
-- CSP nonce, 브라우저 보안 이벤트, 안전한 오류 응답
+- Authentication with Sites/ChatGPT federated identity and WebAuthn Passkeys
+- PBKDF2-SHA-256 password hashing and server-side sessions
+- Product registration, search, detail views, and seller management
+- JPEG, PNG, and WebP magic-byte validation with a 5 MB upload limit
+- Global and one-to-one chat
+- User and product reporting with automatic action after repeated reports
+- `wlt_` hash ID wallets derived from 256-bit seeds
+- Atomic, idempotent transfers with self-transfer and duplicate-payment prevention
+- Product purchase request, approval, and payment state transitions
+- Ethereum wallet signature linking and a fixed-price escrow example
+- Administrator-only dashboard and security audit logs
+- CSP nonces, browser security event reporting, and safe error responses
+- A separately managed in-product privacy policy linked from the site footer
 
-## 기술 구성
+## Technology Stack
 
 - Frontend: React 19, Next.js 16, Vinext, Vite
 - Runtime: Cloudflare Workers
@@ -30,15 +31,15 @@
 - Web3: Solidity, Foundry, OpenZeppelin, viem
 - Security testing: Node test runner, ESLint, npm audit, CodeQL, OWASP ZAP
 
-## 요구 환경
+## Requirements
 
-- Node.js 22.13 이상
+- Node.js 22.13 or later
 - npm
-- Docker: ZAP 검사를 실행할 때만 필요
-- Foundry: 스마트 컨트랙트 테스트를 실행할 때만 필요
-- D1과 R2를 사용할 수 있는 Cloudflare Workers 호환 환경
+- Docker: required only for ZAP scans
+- Foundry: required only for smart contract tests
+- A Cloudflare Workers-compatible environment with D1 and R2 support
 
-## 로컬 실행
+## Local Development
 
 ```bash
 git clone https://github.com/gogooma125732/secure_coding.git
@@ -48,60 +49,62 @@ npm run setup:local
 npm run dev
 ```
 
-`setup:local`은 Cloudflare Worker가 로컬에서 읽는 `.dev.vars`에 서로 다른 256비트 난수를 생성하고 파일 권한을 소유자 전용으로 설정합니다. 이미 파일이 있으면 덮어쓰지 않습니다. 기본 로컬 주소는 개발 서버 출력에서 확인합니다.
+`setup:local` generates separate 256-bit random values in `.dev.vars`, which the Cloudflare Worker reads locally, and restricts the file permissions to the owner. It does not overwrite an existing file. Check the development server output for the local URL.
 
-`.dev.vars`를 변경한 뒤에는 개발 서버를 완전히 종료하고 다시 시작해야 합니다. 실제 secret을 `.env.example`에 작성하거나 Git에 커밋하면 안 됩니다.
+After changing `.dev.vars`, stop the development server completely and restart it. Never place real secrets in `.env.example` or commit them to Git.
 
-## 환경변수
+## Environment Variables
 
-| 변수 | 필수 여부 | 용도 |
+| Variable | Required | Purpose |
 |---|---:|---|
-| `ADMIN_BOOTSTRAP_TOKEN` | 최초 설정 | 최초 관리자 설정용 32자 이상 일회성 난수 |
-| `BOT_PROTECTION_MODE` | 필수 | `adaptive` 권장 |
-| `BOT_PROTECTION_SECRET` | 필수 | 자동화 방어 challenge HMAC secret |
-| `PLATFORM_IDENTITY_SECRET` | 필수 | 플랫폼 신원 가명화 HMAC secret |
-| `PASSKEY_RP_ID` | Passkey 사용 시 | 포트·스킴을 제외한 배포 호스트 |
-| `PASSKEY_ORIGIN` | Passkey 사용 시 | HTTPS를 포함한 정확한 origin |
-| `WEB3_CHAIN_ID` | Web3 사용 시 | `11155111` Sepolia 권장 |
-| `WEB3_RPC_URL` | Web3 사용 시 | HTTPS Ethereum RPC URL |
-| `WEB3_RPC_HOST_ALLOWLIST` | Web3 사용 시 | 허용 RPC 호스트 목록 |
-| `WEB3_ESCROW_ADDRESS` | 정산 사용 시 | 배포한 에스크로 주소 |
-| `WEB3_PAYMENT_TOKEN_ADDRESS` | 정산 사용 시 | 결제 토큰 주소 |
-| `WEB3_CONFIRMATIONS` | Web3 사용 시 | 필요한 확인 블록 수 |
+| `ADMIN_BOOTSTRAP_TOKEN` | Initial setup | One-time random value of at least 32 characters for the first administrator |
+| `BOT_PROTECTION_MODE` | Yes | `adaptive` is recommended |
+| `BOT_PROTECTION_SECRET` | Yes | HMAC secret for the automation-defense challenge |
+| `PLATFORM_IDENTITY_SECRET` | Yes | HMAC secret for platform identity pseudonymization |
+| `PASSKEY_RP_ID` | When using Passkeys | Deployment hostname without a port or scheme |
+| `PASSKEY_ORIGIN` | When using Passkeys | Exact origin including HTTPS |
+| `WEB3_CHAIN_ID` | When using Web3 | `11155111` Sepolia is recommended |
+| `WEB3_RPC_URL` | When using Web3 | HTTPS Ethereum RPC URL |
+| `WEB3_RPC_HOST_ALLOWLIST` | When using Web3 | List of approved RPC hosts |
+| `WEB3_ESCROW_ADDRESS` | When using settlement | Deployed escrow address |
+| `WEB3_PAYMENT_TOKEN_ADDRESS` | When using settlement | Payment token address |
+| `WEB3_CONFIRMATIONS` | When using Web3 | Required confirmation count |
 
-각 secret은 서로 다른 고엔트로피 난수로 생성하고 호스팅 환경의 secret 저장소에서만 관리합니다.
+Generate each secret as an independent, high-entropy random value and manage it only in the hosting environment's secret store.
 
-## 데이터 바인딩과 마이그레이션
+## Data Bindings and Migrations
 
-`.openai/hosting.json`에는 비밀값이 아니라 논리적 바인딩 이름만 저장합니다.
+The public source does not require or commit `.openai/hosting.json`. The default logical binding names are:
 
 - D1: `DB`
 - R2: `UPLOADS`
-- 마이그레이션: `drizzle/*.sql`
-- 스키마: `db/schema.ts`
+- Migrations: `drizzle/*.sql`
+- Schema: `db/schema.ts`
 
-스키마 변경 시 다음 순서를 따릅니다.
+The binding names can be overridden with the `SAFER_D1_BINDING` and `SAFER_R2_BINDING` environment variables.
+
+Follow this sequence when changing the schema:
 
 ```bash
 npm run db:generate
 npm test
 ```
 
-생성된 SQL을 검토한 뒤 배포하며, 이미 운영 환경에 적용된 마이그레이션은 수정하지 않습니다.
+Review generated SQL before deployment. Never modify a migration that has already been applied to production.
 
-## 관리자 최초 설정
+## Initial Administrator Setup
 
-관리자 계정은 소스코드나 마이그레이션에 하드코딩하지 않습니다.
+Administrator accounts are not hard-coded in source code or migrations.
 
-1. 32자 이상의 일회성 `ADMIN_BOOTSTRAP_TOKEN`을 런타임 secret으로 설정합니다.
-2. 첫 일반 계정을 생성합니다.
-3. 동일 출처의 `/api/admin/bootstrap`에 대상 username을 전달하고 `x-admin-bootstrap-token` 헤더로 일회성 토큰을 제출합니다.
-4. 성공 후 `ADMIN_BOOTSTRAP_TOKEN`을 즉시 제거하거나 회전합니다.
-5. `admin.bootstrapped` 감사 로그를 확인합니다.
+1. Set a one-time `ADMIN_BOOTSTRAP_TOKEN` of at least 32 characters as a runtime secret.
+2. Create the first regular account.
+3. Send the target username to same-origin `/api/admin/bootstrap` and submit the one-time token in the `x-admin-bootstrap-token` header.
+4. Immediately remove or rotate `ADMIN_BOOTSTRAP_TOKEN` after success.
+5. Confirm the `admin.bootstrapped` audit event.
 
-이미 관리자가 존재하면 bootstrap 요청은 거부됩니다.
+Bootstrap requests are rejected once an administrator already exists.
 
-## 품질 및 보안 검사
+## Quality and Security Checks
 
 ```bash
 npx tsc --noEmit
@@ -110,7 +113,7 @@ npm run security:check
 npm test
 ```
 
-`security:check`는 lockfile의 HTTPS registry와 SHA-512 무결성을 확인하고, 프로덕션 의존성에서 High 이상 취약점이 발견되면 실패합니다.
+`security:check` verifies that the lockfile uses the HTTPS registry and SHA-512 integrity values, and fails when a High or Critical vulnerability is found in production dependencies.
 
 ### OWASP ZAP
 
@@ -120,52 +123,61 @@ npm run security:zap:baseline
 ZAP_ALLOW_ACTIVE_SCAN=local-only npm run security:zap:active
 ```
 
-Active Scan은 스크립트 수준에서 localhost 대상으로 제한됩니다. 운영·공유 환경을 대상으로 능동 공격 검사를 실행하지 마세요.
+The Active Scan script is restricted to localhost. Do not run active attack scans against production or shared environments.
 
-### CodeQL과 Dependabot
+### CodeQL and Dependabot
 
-- `.github/workflows/security.yml`: 빌드·테스트·의존성 검사와 CodeQL 분석
-- `.github/dependabot.yml`: npm 및 GitHub Actions 주간 업데이트
+- `.github/workflows/security.yml`: build, test, dependency audit, and CodeQL analysis
+- `.github/dependabot.yml`: weekly npm and GitHub Actions updates
 
-CodeQL 경보가 발생하면 수정 또는 오탐 근거를 기록한 뒤 병합합니다.
+When CodeQL raises an alert, document the fix or false-positive justification before merging.
 
-## 보안 설계 문서
+## Security Design Documents
 
-- [OWASP API Security Top 10:2023 및 OWASP Top 10:2025 통제표](docs/security/owasp-coverage.md)
-- [인증 아키텍처](docs/security/authentication-architecture.md)
-- [스마트 컨트랙트 위협 모델](docs/security/smart-contract-threat-model.md)
-- [유지보수 절차](docs/maintenance.md)
-- [보안 취약점 신고 정책](SECURITY.md)
+- [OWASP API Security Top 10:2023 and OWASP Top 10:2025 control mapping](docs/security/owasp-coverage.md)
+- [Authentication architecture](docs/security/authentication-architecture.md)
+- [Smart contract threat model](docs/security/smart-contract-threat-model.md)
+- [Maintenance procedure](docs/maintenance.md)
+- [Vulnerability reporting policy](SECURITY.md)
+- [Published SAFER privacy policy](https://safer-secure-market-2026.hippipo779.chatgpt.site/privacy)
+- [Korean Personal Information Protection Act](https://www.law.go.kr/법령/개인정보보호법)
+- [Personal Information Protection Commission privacy-policy guidelines (April 2025)](https://www.pipc.go.kr/np/cop/bbs/selectBoardArticle.do?bbsId=BS217&mCode=D010030000&nttId=11134)
 
-## 주요 보안 원칙
+## Privacy Policy Management
 
-- 클라이언트 입력과 권한을 신뢰하지 않고 서버에서 다시 검증합니다.
-- SQL은 prepared statement와 bind만 사용합니다.
-- 로그인 ID, 공개 별칭, 거래별 별칭과 지갑 ID를 분리합니다.
-- 지갑 seed와 Passkey 개인키를 서버에 저장하지 않습니다.
-- 송금과 상품 결제는 DB 제약, 상태 전이와 idempotency를 함께 사용합니다.
-- API 오류는 내부 스택과 SQL을 노출하지 않고 요청 ID만 반환합니다.
-- secret 미설정이나 외부 검증 실패 시 fail-closed 합니다.
+The user-facing privacy policy is managed as a separate page inside the deployed service at [`/privacy`](https://safer-secure-market-2026.hippipo779.chatgpt.site/privacy) and is linked directly from the global footer. The route entry is defined in `app/privacy/page.tsx`, while the rendered policy and navigation are maintained with the application UI in `app/marketplace-client.tsx`.
 
-## 알려진 제한사항
+The deployed page is the canonical notice presented to users; this README only describes how it is governed. Any change to collected data, authentication, sessions, Passkeys, uploads, chat, reports, transactions, wallets, security logs, retention, third-party processing, or on-chain disclosure must update the privacy policy in the same change set. The updated page must be reviewed against the Personal Information Protection Act and the Personal Information Protection Commission guidelines, regression-tested, and deployed as a new site version.
 
-- 외부 CAPTCHA를 사용하지 않아 사람이 개입한 고도화된 자동화는 완전히 차단할 수 없습니다.
-- 인증된 사용자별 ZAP 검사는 별도의 테스트 계정과 ZAP context가 필요합니다.
-- Ethereum mainnet 배포 전에는 독립적인 스마트 컨트랙트 감사를 수행해야 합니다.
-- 플랫폼 신원 기반 비공개 배포는 호스팅 제공자의 인증 경계에 의존합니다.
+## Core Security Principles
 
-## 공개 저장소 주의사항
+- Never trust client input or authorization decisions; validate them again on the server.
+- Use prepared statements and bound parameters for every SQL query.
+- Keep login IDs, public aliases, per-transaction aliases, and wallet IDs in separate identity domains.
+- Do not store wallet seeds or Passkey private keys on the server.
+- Protect transfers and product payments with database constraints, state transitions, and idempotency.
+- Return only a request ID for API failures; never expose internal stacks or SQL messages.
+- Fail closed when required secrets are missing or external verification fails.
 
-다음 항목은 절대 커밋하지 않습니다.
+## Known Limitations
+
+- Because no external CAPTCHA is used, advanced automation with human assistance cannot be blocked completely.
+- Authenticated ZAP scans for each user role require separate test accounts and ZAP contexts.
+- An independent smart contract audit is required before deployment to Ethereum mainnet.
+- Private deployment based on platform identity depends on the hosting provider's authentication boundary.
+
+## Public Repository Precautions
+
+Never commit the following:
 
 - `.env`, `.env.local`, `.dev.vars`
-- 비밀번호, 지갑 seed, 개인키, 세션·CSRF 쿠키
-- Sites/GitHub/API 토큰과 SIWC 우회 토큰
-- 운영 DB 덤프, 실제 사용자 이메일과 로그
-- ZAP 인증 context 및 테스트 계정 비밀번호
+- Passwords, wallet seeds, private keys, session cookies, or CSRF cookies
+- Sites, GitHub, or API tokens, including SIWC bypass tokens
+- Production database dumps, real user email addresses, or logs
+- ZAP authentication contexts or test-account passwords
 
-보안 문제를 발견했다면 공개 Issue에 공격 절차나 secret을 올리지 말고 [SECURITY.md](SECURITY.md)의 비공개 신고 절차를 이용해 주세요.
+If you discover a security issue, do not post exploit steps or secrets in a public Issue. Use the private reporting process in [SECURITY.md](SECURITY.md).
 
-## 라이선스 및 용도
+## License and Intended Use
 
-교육용 프로젝트입니다. 실제 자산을 처리하는 운영 서비스나 Ethereum mainnet에 사용하기 전 별도의 보안 검토와 법적 검토가 필요합니다.
+This is an educational project. A separate security and legal review is required before using it as a production service that handles real assets or before deploying it to Ethereum mainnet.

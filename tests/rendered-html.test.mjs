@@ -3,10 +3,11 @@ import { access, readFile } from "node:fs/promises";
 import test from "node:test";
 
 test("renders the finished Korean marketplace instead of starter content", async () => {
-  const [layout, page, walletPage, client, packageJson] = await Promise.all([
+  const [layout, page, walletPage, privacyPage, client, packageJson] = await Promise.all([
     readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/wallet/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/privacy/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/marketplace-client.tsx", import.meta.url), "utf8"),
     readFile(new URL("../package.json", import.meta.url), "utf8"),
   ]);
@@ -14,12 +15,17 @@ test("renders the finished Korean marketplace instead of starter content", async
   assert.match(layout, /SAFER — 안전한 중고거래/);
   assert.match(page, /view="home"/);
   assert.match(walletPage, /view="wallet"/);
+  assert.match(privacyPage, /view="privacy"/);
   assert.match(client, /좋은 거래는/);
   assert.match(client, /신뢰에서 시작돼요/);
   assert.match(client, /거래 보호 중/);
   assert.match(client, /MAX_CLIENT_IMAGE_BYTES = 5 \* 1024 \* 1024/);
   assert.match(client, /JPEG\(\.jpg, \.jpeg\), PNG\(\.png\), WebP\(\.webp\)/);
   assert.match(client, /status === 413/);
+  assert.match(client, /개인정보처리방침/);
+  assert.match(client, /href="\/privacy"/);
+  assert.match(client, /ChatGPT 연합 신원 HMAC 해시/);
+  assert.match(client, /Passkey 개인키·생체정보/);
   assert.match(client, /선택한 파일은.*formatFileSize/);
   assert.doesNotMatch(`${layout}${page}${client}${packageJson}`, /codex-preview|Your site is taking shape|react-loading-skeleton/i);
   await assert.rejects(access(new URL("../app/_sites-preview/SkeletonPreview.tsx", import.meta.url)));

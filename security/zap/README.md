@@ -19,3 +19,8 @@ digest in CI.
 The unauthenticated scan covers public routes and browser headers. A separate
 test-only account/context is still required for authenticated BOLA, CSRF,
 product, chat, wallet, and administrator workflows.
+
+The public-route inventory includes `/privacy`, which is the separately managed
+user-facing privacy policy linked from the global footer. Regression checks
+should confirm that the page remains reachable without exposing internal
+configuration, security logs, account mappings, or non-public identifiers.

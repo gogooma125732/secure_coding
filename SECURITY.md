@@ -1,31 +1,37 @@
 # Security Policy
 
-## Supported version
+## Supported Version
 
-보안 수정은 기본 브랜치의 최신 버전을 대상으로 합니다.
+Security fixes target the latest version of the default branch.
 
-## Reporting a vulnerability
+## Reporting a Vulnerability
 
-취약점은 공개 Issue에 상세 공격 절차, 실제 계정정보, 토큰 또는 개인정보와 함께 게시하지 마세요.
+Do not post detailed exploit steps, real account information, tokens, or personal data in a public Issue.
 
-1. GitHub 저장소의 **Security → Advisories → Report a vulnerability**를 사용합니다.
-2. 영향받는 기능, 재현 조건, 예상 영향과 최소한의 증거를 제공합니다.
-3. 실제 사용자 데이터 대신 테스트 계정과 비식별 예시를 사용합니다.
-4. 수정 및 공개 일정이 합의되기 전에는 제3자에게 세부 정보를 공유하지 않습니다.
+1. Use **Security → Advisories → Report a vulnerability** in the GitHub repository.
+2. Provide the affected feature, reproduction conditions, expected impact, and the minimum evidence needed to verify the issue.
+3. Use test accounts and de-identified examples instead of real user data.
+4. Do not share details with third parties until the fix and disclosure schedule have been agreed upon.
 
-접수 후 가능한 한 빠르게 재현 여부와 위험도를 확인하고, 수정·회귀 테스트·배포 후 공개 범위를 협의합니다.
+After receiving a report, we will confirm reproducibility and severity as quickly as possible, then coordinate disclosure after the fix, regression testing, and deployment are complete.
 
 ## Scope
 
-다음 항목을 우선적으로 확인합니다.
+The following areas receive priority:
 
-- 인증·세션·Passkey 우회
-- 관리자 또는 객체 소유권 우회
-- 송금·상품 결제 중복 처리
-- 지갑 seed·개인키·토큰 노출
-- SQL/명령/XSS 주입
-- 이미지 업로드 검증 우회
-- SSRF 및 Ethereum RPC allowlist 우회
-- 감사 로그에 민감정보가 기록되는 문제
+- Authentication, session, or Passkey bypass
+- Administrator or object-ownership bypass
+- Duplicate transfer or product-payment processing
+- Exposure of wallet seeds, private keys, or tokens
+- SQL, command, or XSS injection
+- Image upload validation bypass
+- SSRF or Ethereum RPC allowlist bypass
+- Sensitive information recorded in audit logs
 
-자동화된 대량 요청, 서비스 거부 테스트, 운영 데이터 변경, 실제 자산 전송은 사전 허가 없이 수행하지 마세요.
+Do not perform automated high-volume requests, denial-of-service testing, production data modification, or real-asset transfers without prior authorization.
+
+## Privacy Policy and Personal Data
+
+SAFER manages its user-facing privacy policy as a separate in-product page at [https://safer-secure-market-2026.hippipo779.chatgpt.site/privacy](https://safer-secure-market-2026.hippipo779.chatgpt.site/privacy), linked from the global footer. The published page is the canonical notice for the personal data processed by the deployed service.
+
+Privacy-impacting security reports—including unintended collection, excessive retention, identifier correlation, disclosure through logs or APIs, and differences between the published policy and actual processing—are in scope. Submit them through the same private vulnerability-reporting channel and use de-identified evidence only.

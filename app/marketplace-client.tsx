@@ -20,7 +20,7 @@ declare global {
   interface Window { ethereum?: Eip1193Provider }
 }
 
-type View = "home" | "login" | "signup" | "market" | "new-product" | "product" | "profile" | "wallet" | "admin";
+type View = "home" | "login" | "signup" | "market" | "new-product" | "product" | "profile" | "wallet" | "privacy" | "admin";
 type User = { id: string; username: string; publicAlias: string; bio: string; role: "user" | "admin"; status: string; balance: number | null; walletReady: boolean };
 type ListedUser = { id: string; alias: string; bio: string };
 type Wallet = { id: string; createdAt: number };
@@ -122,6 +122,7 @@ export function MarketplaceApp({ view, resourceId }: { view: View; resourceId?: 
         {view === "product" && resourceId ? <ProductDetail id={resourceId} user={user} onUserChange={setUser} /> : null}
         {view === "profile" ? <Profile user={user} sessionReady={sessionReady} onUserChange={setUser} /> : null}
         {view === "wallet" ? <WalletCenter user={user} sessionReady={sessionReady} onUserChange={setUser} /> : null}
+        {view === "privacy" ? <PrivacyPolicy /> : null}
         {view === "admin" ? <Admin user={user} sessionReady={sessionReady} onLogout={logout} /> : null}
       </main>
       {!isAdminConsole ? <Footer /> : null}
@@ -1116,7 +1117,152 @@ function LoadingCards() { return <div className="product-grid">{[1, 2, 3, 4].map
 function PageLoading() { return <div className="page-loading" role="status"><span /><p>안전하게 불러오는 중…</p></div>; }
 function SignInRequired() { return <EmptyState title="로그인이 필요해요" body="이 기능은 로그인한 사용자만 사용할 수 있습니다." action={<a className="button primary" href="/login">로그인</a>} />; }
 function EmptyState({ title, body, action }: { title: string; body: string; action?: React.ReactNode }) { return <div className="empty-state"><span>◇</span><h2>{title}</h2><p>{body}</p>{action}</div>; }
-function Footer() { return <footer><a className="brand" href="/"><span className="brand-mark">S</span><span>SAFER<small>secure secondhand</small></span></a><p>신뢰를 먼저 설계한 중고거래 플랫폼</p><nav><a href="/market">마켓</a><a href="/signup">회원가입</a><a href="/login">로그인</a></nav><small>© 2026 SAFER · Secure Software Engineering Project</small></footer>; }
+
+function PrivacyPolicy() {
+  return (
+    <article className="privacy-page">
+      <header className="privacy-hero">
+        <p className="eyebrow"><span /> PRIVACY AT SAFER</p>
+        <h1>개인정보처리방침</h1>
+        <p>SAFER는 서비스 제공에 필요한 정보만 처리하고, 계정·거래·지갑 정보를 서로 분리하여 보호합니다.</p>
+        <div className="privacy-summary" aria-label="개인정보 처리 핵심 요약">
+          <span><b>최소 수집</b>서비스에 필요한 항목만</span>
+          <span><b>원문 미저장</b>연합 신원은 HMAC 가명화</span>
+          <span><b>광고 추적 없음</b>행태정보 광고에 미사용</span>
+          <span><b>권리 보장</b>열람·정정·삭제 요청 가능</span>
+        </div>
+      </header>
+
+      <div className="privacy-layout">
+        <aside className="privacy-index" aria-label="개인정보처리방침 목차">
+          <strong>목차</strong>
+          <a href="#privacy-purpose">1. 처리 목적과 항목</a>
+          <a href="#privacy-retention">2. 보유 및 이용기간</a>
+          <a href="#privacy-sharing">3. 제공·위탁·국외 이전</a>
+          <a href="#privacy-destruction">4. 파기 절차와 방법</a>
+          <a href="#privacy-rights">5. 정보주체의 권리</a>
+          <a href="#privacy-security">6. 안전성 확보조치</a>
+          <a href="#privacy-cookies">7. 쿠키와 자동화 조치</a>
+          <a href="#privacy-contact">8. 문의 및 변경</a>
+        </aside>
+
+        <div className="privacy-content">
+          <section className="privacy-notice" aria-label="정책 적용 안내">
+            <strong>교육·검증용 서비스 안내</strong>
+            <p>본 방침은 2026년 7월 26일 현재 SAFER 코드와 배포 구성을 기준으로 작성되었습니다. 정식 상용 운영 전에는 실제 사업자 정보, 개인정보 보호책임자 연락처, 법정 보유기간 및 국외 이전·위탁 계약을 최종 확정해야 합니다.</p>
+          </section>
+
+          <section id="privacy-purpose">
+            <span className="privacy-number">01</span>
+            <h2>개인정보의 처리 목적과 항목</h2>
+            <p>SAFER는 회원 식별, 안전한 거래, 커뮤니티 운영과 보안 사고 대응을 위해 아래 정보를 처리합니다.</p>
+            <div className="privacy-table-wrap">
+              <table>
+                <thead><tr><th>구분</th><th>처리 항목</th><th>목적</th></tr></thead>
+                <tbody>
+                  <tr><td>회원·인증</td><td>로그인 ID, 비밀번호 해시, 공개 별칭, 선택 소개글, 역할·상태, 가입·수정 시각, ChatGPT 연합 신원 HMAC 해시</td><td>가입, 로그인, 계정 관리, 중복 가입 방지</td></tr>
+                  <tr><td>세션·Passkey</td><td>세션·CSRF 토큰의 해시, 만료·최근 이용 시각, Passkey credential ID·공개키·서명 카운터·기기 유형·백업 여부</td><td>로그인 유지, 재사용 방지, 피싱 저항형 인증</td></tr>
+                  <tr><td>상품·커뮤니티</td><td>상품명·설명·가격·이미지, 채팅 메시지, 신고 대상·사유·처리 상태</td><td>상품 게시, 사용자 소통, 신고 처리와 안전 조치</td></tr>
+                  <tr><td>거래·지갑</td><td>내부 hash 지갑 ID, 송·수신자 내부 ID, 금액·메모·거래 시각·상태, 상품 거래별 별칭, Ethereum 공개 주소·체인 ID·검증 시각</td><td>송금, 상품 결제, 중복·자가 거래 방지, 지갑 소유권 확인</td></tr>
+                  <tr><td>보안·접속</td><td>IP 기반 일방향 해시·요청 제한 키, 요청 ID, 오류 종류, 보안 이벤트, 감사 로그</td><td>자동화 요청 방어, 부정 이용 탐지, 장애·보안 사고 조사</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p className="privacy-detail">Sites가 전달하는 인증 이메일은 연합 신원을 가명화하는 과정에서만 사용하며 원문을 회원 DB에 저장하지 않습니다. SAFER는 Passkey 개인키·생체정보, ChatGPT 토큰, Ethereum 개인키·복구문구를 수집하지 않습니다. 내부 지갑 seed는 생성 시 한 번만 제공하고 서버에 저장하지 않습니다.</p>
+          </section>
+
+          <section id="privacy-retention">
+            <span className="privacy-number">02</span>
+            <h2>개인정보의 보유 및 이용기간</h2>
+            <ul>
+              <li><b>회원·프로필·Passkey·연결 지갑:</b> 회원 탈퇴 또는 삭제 요청 처리 시까지</li>
+              <li><b>로그인 세션:</b> 발급 후 최대 8시간, 30분 동안 활동이 없으면 조기 만료</li>
+              <li><b>Passkey·Ethereum 서명 challenge:</b> 발급 후 5분 또는 일회 사용 시까지</li>
+              <li><b>요청 제한 키:</b> 마지막 제한 구간 후 최대 2일</li>
+              <li><b>상품·채팅·신고·거래·감사 기록:</b> 서비스 운영과 거래 무결성, 분쟁·보안 사고 대응에 필요한 기간 또는 삭제 요청 처리 시까지. 관계 법령상 보존 의무가 적용되면 해당 기간 동안 분리 보관</li>
+            </ul>
+            <p className="privacy-detail">블록체인에 직접 기록된 거래는 네트워크 특성상 SAFER가 임의로 수정하거나 삭제할 수 없습니다. 현재 SAFER의 내부 원화 잔액과 거래는 데이터베이스 기록이며, Ethereum 연결은 공개 주소의 소유권 확인에 사용됩니다.</p>
+          </section>
+
+          <section id="privacy-sharing">
+            <span className="privacy-number">03</span>
+            <h2>제3자 제공, 처리위탁 및 국외 이전</h2>
+            <p>SAFER는 정보주체의 별도 동의나 법률상 근거 없이 개인정보를 판매하거나 광고 목적으로 제3자에게 제공하지 않습니다.</p>
+            <div className="privacy-table-wrap">
+              <table>
+                <thead><tr><th>서비스 제공자</th><th>처리 업무와 항목</th><th>처리 위치·방법</th></tr></thead>
+                <tbody>
+                  <tr><td>OpenAI Sites</td><td>사이트 접근 인증, 배포·요청 전달. 인증 신원은 SAFER 서버에서 HMAC 해시로 변환</td><td>접속 시 암호화된 네트워크를 통해 국외 인프라에서 처리될 수 있음</td></tr>
+                  <tr><td>Cloudflare</td><td>Workers 실행, D1 데이터베이스, R2 상품 이미지 저장, 보안·전송 처리</td><td>글로벌 인프라에서 암호화된 네트워크를 통해 처리될 수 있음</td></tr>
+                  <tr><td>Ethereum 네트워크·RPC 제공자</td><td>사용자가 지갑 연결 또는 온체인 기능을 선택한 경우 공개 주소, 서명 검증 요청, 공개 거래정보 처리</td><td>분산 네트워크 및 설정된 HTTPS RPC로 전송. 블록체인 기록은 공개·영구적일 수 있음</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p className="privacy-detail">정식 공개 운영 시 운영자는 실제 이용하는 공급자, 이전 국가, 이전 일시·방법, 보유기간과 거부 방법을 계약 기준으로 확정하여 이 표를 갱신합니다.</p>
+          </section>
+
+          <section id="privacy-destruction">
+            <span className="privacy-number">04</span>
+            <h2>개인정보의 파기 절차와 방법</h2>
+            <p>처리 목적이 달성되거나 삭제 요청이 확인되면 관련 정보를 지체 없이 삭제합니다. 법령이나 분쟁 대응을 위해 보존해야 하는 정보는 다른 정보와 분리하고 접근을 제한합니다.</p>
+            <ul>
+              <li>데이터베이스 기록은 복구가 어렵도록 삭제 명령을 수행하고 참조 관계를 확인합니다.</li>
+              <li>R2 상품 이미지는 연결된 상품 삭제 절차에 따라 객체를 제거합니다.</li>
+              <li>세션 쿠키는 로그아웃·만료 시 즉시 무효화하고 서버의 해시 기록을 삭제합니다.</li>
+              <li>블록체인에 이미 공개된 정보는 기술적으로 파기할 수 없으므로 온체인 사용 전에 이를 안내합니다.</li>
+            </ul>
+          </section>
+
+          <section id="privacy-rights">
+            <span className="privacy-number">05</span>
+            <h2>정보주체의 권리와 행사 방법</h2>
+            <p>이용자는 자신의 개인정보에 대한 열람, 정정, 삭제, 처리정지 및 동의 철회를 요청할 수 있습니다. 요청 시 계정 탈취를 막기 위해 현재 세션, 연합 신원 또는 Passkey로 본인 여부를 다시 확인할 수 있습니다.</p>
+            <ul>
+              <li>소개글과 비밀번호: 마이페이지에서 직접 변경</li>
+              <li>Passkey: 마이페이지의 Passkey 관리에서 확인·삭제</li>
+              <li>그 밖의 열람·삭제·처리정지: 아래 개인정보 보호 문의 채널로 비공개 요청</li>
+            </ul>
+            <p className="privacy-detail">다른 이용자의 권리, 거래 무결성 또는 법적 의무를 침해하는 범위에서는 일부 요청이 제한될 수 있으며, 제한 사유를 안내합니다.</p>
+          </section>
+
+          <section id="privacy-security">
+            <span className="privacy-number">06</span>
+            <h2>개인정보의 안전성 확보조치</h2>
+            <ul>
+              <li>PBKDF2-SHA-256 비밀번호 해시, 세션 토큰 해시, 연합 신원 HMAC 가명화</li>
+              <li>HttpOnly·Secure·SameSite 쿠키, CSRF와 동일 출처 검증, 8시간 절대·30분 유휴 세션 만료</li>
+              <li>Passkey 일회용 challenge, 고정 RP ID·origin, 사용자 확인과 서명 카운터 검증</li>
+              <li>관리자·소유자 권한의 서버 재검증, prepared statement와 입력 길이·형식 제한</li>
+              <li>JPEG·PNG·WebP magic byte 검사와 5MB 이미지 제한</li>
+              <li>CSP nonce, 보안 헤더, 속도 제한, 민감정보가 제거된 감사 로그와 요청 추적 ID</li>
+            </ul>
+          </section>
+
+          <section id="privacy-cookies">
+            <span className="privacy-number">07</span>
+            <h2>쿠키, 행태정보 및 자동화된 조치</h2>
+            <p>SAFER는 로그인 세션과 CSRF 방어에 필요한 쿠키만 사용하며, 맞춤형 광고나 제3자 행태 추적 쿠키를 사용하지 않습니다. 브라우저 설정에서 쿠키를 차단할 수 있으나 로그인 기능이 동작하지 않을 수 있습니다.</p>
+            <p>동일 대상에 대한 유효 신고가 기준 횟수에 도달하면 상품 노출 제한 또는 계정 휴면 전환이 자동으로 적용될 수 있습니다. 이용자는 개인정보 보호 문의 채널을 통해 검토와 이의를 요청할 수 있으며, 관리자가 신고 사유와 감사 기록을 확인합니다.</p>
+          </section>
+
+          <section id="privacy-contact">
+            <span className="privacy-number">08</span>
+            <h2>개인정보 보호책임자, 문의 및 방침 변경</h2>
+            <div className="privacy-contact-card">
+              <div><small>개인정보 보호책임</small><strong>SAFER 프로젝트 운영자</strong></div>
+              <a className="button primary" href="https://github.com/gogooma125732/secure_coding/security/advisories/new" target="_blank" rel="noreferrer">비공개 문의하기</a>
+            </div>
+            <p>개인정보나 보안정보를 공개 GitHub Issue에 게시하지 마세요. 비공개 Security Advisory를 통해 요청하면 본인 확인 후 처리 결과를 안내합니다. 정식 서비스 전환 시 담당자의 성명, 전화번호 및 이메일을 이 영역에 추가합니다.</p>
+            <p>이 방침은 <b>2026년 7월 26일</b>부터 적용됩니다. 중요한 내용이 변경되면 시행 전에 이 페이지를 통해 알립니다.</p>
+            <p className="privacy-reference">작성 기준: <a href="https://www.law.go.kr/법령/개인정보보호법" target="_blank" rel="noreferrer">개인정보 보호법</a> · <a href="https://www.pipc.go.kr/np/cop/bbs/selectBoardArticle.do?bbsId=BS217&mCode=D010030000&nttId=11134" target="_blank" rel="noreferrer">개인정보보호위원회 처리방침 작성지침</a></p>
+          </section>
+        </div>
+      </div>
+    </article>
+  );
+}
+
+function Footer() { return <footer><a className="brand" href="/"><span className="brand-mark">S</span><span>SAFER<small>secure secondhand</small></span></a><p>신뢰를 먼저 설계한 중고거래 플랫폼</p><nav><a href="/market">마켓</a><a href="/signup">회원가입</a><a href="/login">로그인</a><a href="/privacy">개인정보처리방침</a></nav><small>© 2026 SAFER · Secure Software Engineering Project</small></footer>; }
 
 async function api<T = Record<string, unknown>>(path: string, init: RequestInit = {}): Promise<T> {
   const headers = new Headers(init.headers);

@@ -38,7 +38,7 @@ jobs:
         run: |
           set -euo pipefail
           for attempt in 1 2 3; do
-            if npm run security:check; then
+            if timeout 120s npm run security:check; then
               exit 0
             fi
             if [ "$attempt" -lt 3 ]; then
@@ -48,6 +48,9 @@ jobs:
           done
           echo "Dependency audit failed after 3 attempts."
           exit 1
+        env:
+          npm_config_fetch_timeout: 30000
+          npm_config_fetch_retries: 1
 
       - name: Build and test
         run: npm test

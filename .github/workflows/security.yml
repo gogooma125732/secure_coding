@@ -26,7 +26,7 @@ jobs:
           cache: npm
 
       - name: Install locked dependencies
-        run: npm ci
+        run: timeout 180s npm ci --fetch-timeout=30000 --fetch-retries=1
 
       - name: Type check
         run: npx tsc --noEmit

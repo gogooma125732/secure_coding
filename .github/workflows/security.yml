@@ -26,7 +26,7 @@ jobs:
           cache: npm
 
       - name: Install locked dependencies
-        run: npm ci
+        run: timeout 180s npm ci --fetch-timeout=30000 --fetch-retries=1
 
       - name: Type check
         run: npx tsc --noEmit
@@ -35,7 +35,22 @@ jobs:
         run: npm run lint
 
       - name: Verify dependency integrity
-        run: npm run security:check
+        run: |
+          set -euo pipefail
+          for attempt in 1 2 3; do
+            if timeout 120s npm run security:check; then
+              exit 0
+            fi
+            if [ "$attempt" -lt 3 ]; then
+              echo "Dependency audit failed, retrying in 15 seconds (attempt $((attempt + 1))/3)..."
+              sleep 15
+            fi
+          done
+          echo "Dependency audit failed after 3 attempts."
+          exit 1
+        env:
+          npm_config_fetch_timeout: 30000
+          npm_config_fetch_retries: 1
 
       - name: Build and test
         run: npm test

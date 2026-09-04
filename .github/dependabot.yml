@@ -4,11 +4,16 @@ updates:
   - package-ecosystem: npm
     directory: /
     schedule:
-      interval: weekly
+      interval: daily
     open-pull-requests-limit: 5
     labels:
       - dependencies
       - security
+    groups:
+      security-patch-updates:
+        applies-to: security-updates
+        update-types:
+          - patch
 
   - package-ecosystem: github-actions
     directory: /
@@ -18,3 +23,8 @@ updates:
     labels:
       - dependencies
       - security
+    groups:
+      security-patch-updates:
+        applies-to: security-updates
+        update-types:
+          - patch

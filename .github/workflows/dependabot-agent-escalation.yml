@@ -1,0 +1,53 @@
+name: Escalate failed Dependabot PR
+
+on:
+  workflow_run:
+    workflows: [Security and quality]
+    types: [completed]
+  workflow_dispatch:
+    inputs:
+      pull_request:
+        description: Dependabot PR number to assign to the AI agent
+        required: true
+        type: string
+
+# workflow_run uses trusted workflow code and never checks out the failed PR.
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  assign-agent:
+    if: >-
+      (github.event_name == 'workflow_dispatch') ||
+      (github.event.workflow_run.conclusion == 'failure')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Assign Copilot agent to the failed Dependabot alert
+        env:
+          GH_TOKEN: ${{ secrets.DEPENDABOT_AGENT_TOKEN }}
+          REPOSITORY: ${{ github.repository }}
+          RUN_BRANCH: ${{ github.event.workflow_run.head_branch }}
+          INPUT_PR: ${{ inputs.pull_request }}
+        run: |
+          set -euo pipefail
+          test -n "$GH_TOKEN" || { echo "DEPENDABOT_AGENT_TOKEN is not configured"; exit 1; }
+
+          if [[ -n "$INPUT_PR" ]]; then
+            pr="$INPUT_PR"
+          else
+            pr=$(gh api "repos/$REPOSITORY/pulls?state=open&per_page=100" \
+              --jq --arg branch "$RUN_BRANCH" '.[] | select(.user.login == "dependabot[bot]" and .head.ref == $branch) | .number' | head -n 1)
+          fi
+          test -n "${pr:-}" || { echo "No open Dependabot PR found"; exit 0; }
+
+          body=$(gh pr view "$pr" --repo "$REPOSITORY" --json body --jq .body)
+          alert=$(printf '%s' "$body" | grep -oE '/dependabot/alerts/[0-9]+' | head -n 1 | cut -d/ -f4 || true)
+          test -n "${alert:-}" || { echo "No Dependabot alert number found in PR body"; exit 0; }
+
+          jq -n \
+            --arg bot 'copilot-swe-agent[bot]' \
+            --arg instructions 'CI failed on a Dependabot security update. Inspect the alert and failed checks, make the smallest safe fix, add focused tests if needed, and open or update the PR. Do not change secrets, auth, deployment, CI permissions, or database migrations. Do not merge.' \
+            '{assignees:[$bot], agent_assignment:{custom_instructions:$instructions}}' \
+            | gh api "repos/$REPOSITORY/dependabot/alerts/$alert" --method PATCH --input -

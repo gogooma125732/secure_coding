@@ -1,0 +1,48 @@
+name: Dependabot low-risk auto-merge
+
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened]
+
+# This privileged workflow only reads PR metadata and enables auto-merge.
+# It intentionally never checks out or executes pull request code.
+permissions:
+  contents: write
+  pull-requests: write
+  checks: read
+
+jobs:
+  enable-auto-merge:
+    if: github.event.pull_request.user.login == 'dependabot[bot]'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Enable auto-merge only for patch-level updates
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          REPOSITORY: ${{ github.repository }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          set -euo pipefail
+
+          # Expected title format: Bump package from 1.2.3 to 1.2.4
+          if [[ "$PR_TITLE" =~ from[[:space:]]([0-9]+)\.([0-9]+)\.([0-9]+)[[:space:]]to[[:space:]]([0-9]+)\.([0-9]+)\.([0-9]+) ]]; then
+            from_major="${BASH_REMATCH[1]}"
+            from_minor="${BASH_REMATCH[2]}"
+            from_patch="${BASH_REMATCH[3]}"
+            to_major="${BASH_REMATCH[4]}"
+            to_minor="${BASH_REMATCH[5]}"
+            to_patch="${BASH_REMATCH[6]}"
+          else
+            echo "Not a simple semver update; human review required."
+            exit 0
+          fi
+
+          if [[ "$from_major" != "$to_major" || "$from_minor" != "$to_minor" || "$to_patch" -le "$from_patch" ]]; then
+            echo "Not a patch-only update; human review required."
+            exit 0
+          fi
+
+          gh pr merge "$PR_NUMBER" --repo "$REPOSITORY" --auto --squash --delete-branch
+
